@@ -5,15 +5,27 @@ from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import default_state
+from aiogram.fsm.state import default_state, StatesGroup, State
 from aiogram.types import Message
 
 default_router = Router()
-start_list = ["Тест1", "Тест2", "Тест3", "Тест4", "Тест5", "Тест6"]
+start_list = ["Тест1", "Тест2", "Тест3"]
+# Список тестов и вопросов
+tests = {
+    "Тест 1": ["Вопрос 1", "Вопрос 2", "Вопрос 3"],
+    "Тест 2": ["Вопрос 1", "Вопрос 2", "Вопрос 3"],
+    "Тест 3": ["Вопрос 1", "Вопрос 2", "Вопрос 3"]
+}
+
+
+# Определяем состояния
+class TestStates(StatesGroup):
+    waiting_for_test_number = State()
+    waiting_for_answer = State()
 
 
 @default_router.message(Command("start"))
-async def cmd_start(message: types.Message):
+async def cmd_start(message: types.Message, state: FSMContext):
     """
     Обработчик команды /start.
     Отправляет приветственное сообщение пользователю с его именем.
@@ -22,6 +34,7 @@ async def cmd_start(message: types.Message):
     """
     await message.answer(f"Здравствуйте, {html.quote(message.from_user.full_name)}!",
                          reply_markup=make_2col_keyboard(start_list))
+    await state.set_state(TestStates.waiting_for_test_number)
 
 
 # Хэндлер на выход из автомата состояний
