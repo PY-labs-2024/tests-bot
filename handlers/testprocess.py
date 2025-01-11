@@ -4,7 +4,49 @@ from aiogram.fsm.context import FSMContext
 from aiogram import Router
 from keyboards import make_2col_keyboard
 import json
+import pandas as pd
 
+
+def average_test_res(test_num: int):
+    # открываем DF с записями о покупках
+    df = pd.read_csv('data/answers.csv')
+    # фильтруем DF по тесту
+    df_filtered = df[(df['test_num'] == test_num)]
+
+    return df_filtered['sum_correct'].mean()
+
+
+def new_row_answers(user_id: int, answers, correct: int, test_num: int):
+    # Проверяем, что список answers содержит ровно 10 элементов
+    if len(answers) != 10:
+        print(len(answers))
+        raise ValueError("Список answers должен содержать ровно 10 элементов")
+
+    # Загружаем существующий файл в DataFrame
+    df = pd.read_csv('data/answers.csv')
+
+    # Создаем новую строку с записями
+    new_row = {
+        'id': user_id,
+        'test_num': test_num,
+        'answer1': answers[0],
+        'answer2': answers[1],
+        'answer3': answers[2],
+        'answer4': answers[3],
+        'answer5': answers[4],
+        'answer6': answers[5],
+        'answer7': answers[6],
+        'answer8': answers[7],
+        'answer9': answers[8],
+        'answer10': answers[9],
+        'sum_correct': correct
+    }
+
+    # Добавляем новую строку в DataFrame
+    df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+    # Сохраняем обновленный DataFrame обратно в файл
+    df.to_csv('data/answers.csv', index=False)
 
 
 tpr = Router()
@@ -49,8 +91,12 @@ async def ask_next_question(message: types.Message, state: FSMContext):
         data = await state.get_data()
         answers = data.get("answers")
         correct = data.get("correct")
+        test_num = data.get("test_num")
 
-        await message.answer(f"Тест завершен. У вас {correct} правильных ответов из {len(answers)}!",
+        new_row_answers(message.from_user.id, answers, correct, test_num)
+        mean_sum = average_test_res(int(test_num))
+        await message.answer(f"Тест завершен. У вас {correct} правильных ответов из {len(answers)}! "
+                             f"В среднем этот тест проходят на {round(mean_sum, 2)}",
                              reply_markup=make_2col_keyboard(start_list))
         await state.set_state(TestStates.waiting_for_test_number)
 
@@ -67,11 +113,10 @@ async def handle_answer(message: types.Message, state: FSMContext):
     question = list(current_test)[current_question]
     correct_answer = data.get('answer_base')[question]
 
+    print(len(list(current_test)))
     answers = data.get('answers', [])
     answers.append(current_test[question][int(message.text)-1])
     await state.update_data(answers=answers)
-
-
 
     current_question = data.get('current_question') + 1
     await state.update_data(current_question=current_question)

@@ -9,12 +9,7 @@ from aiogram.fsm.state import default_state, StatesGroup, State
 from aiogram.types import Message
 
 default_router = Router()
-start_list = [
-        "Математическое утверждение, истинность которого установлена путём доказательства",
-        "Исходное положение какой-либо теории, принимаемое в рамках данной теории истинным без требования доказательства",
-        "Предположение или догадка, которая требует доказательства",
-        "Утверждение, которое не требует доказательства"
-    ]
+start_list = ["Тест 1", "Тест 2", "Тест 3"]
 # Список тестов и вопросов
 tests = {
     "Тест 1": ["Вопрос 1", "Вопрос 2", "Вопрос 3"],
@@ -56,7 +51,7 @@ async def cmd_cancel_no_state(message: Message, state: FSMContext):
     :return: None
     """
     # Стейт сбрасывать не нужно, удалим только данные
-    await state.set_data({})
+    await state.set_state(TestStates.waiting_for_test_number)
     await message.answer(text="Нечего отменять",
                          reply_markup=make_2col_keyboard(start_list))
 
@@ -72,7 +67,6 @@ async def cmd_cancel(message: Message, state: FSMContext):
     :param state: объект состояния
     :return: None
     """
-    await state.clear()
+    await state.set_state(TestStates.waiting_for_test_number)
     await message.answer(text="Действие отменено",
                          reply_markup=make_2col_keyboard(start_list))
-
