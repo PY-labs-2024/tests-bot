@@ -1,4 +1,4 @@
-from handlers.default import TestStates, tests, answers_num, start_list
+from handlers.default import TestStates, answers_num, start_list
 from aiogram import types
 from aiogram.fsm.context import FSMContext
 from aiogram import Router
@@ -55,7 +55,7 @@ tpr = Router()
 @tpr.message(TestStates.waiting_for_test_number)
 async def handle_test_selection(message: types.Message, state: FSMContext):
     test_name = message.text
-    if test_name in tests:
+    if test_name in start_list:
         with open(f"data/test{test_name[-1]}.json", "r", encoding='utf-8') as my_file:
             json_test = my_file.read()
         test_base = json.loads(json_test)

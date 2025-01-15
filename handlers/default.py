@@ -9,14 +9,9 @@ from aiogram.fsm.state import default_state, StatesGroup, State
 from aiogram.types import Message
 
 default_router = Router()
-start_list = ["Тест 1", "Тест 2", "Тест 3"]
-# Список тестов и вопросов
-tests = {
-    "Тест 1": ["Вопрос 1", "Вопрос 2", "Вопрос 3"],
-    "Тест 2": ["Вопрос 1", "Вопрос 2", "Вопрос 3"],
-    "Тест 3": ["Вопрос 1", "Вопрос 2", "Вопрос 3"]
-}
 
+#Названия кнопок
+start_list = ["Тест 1", "Тест 2", "Тест 3"]
 answers_num = ['1', '2', '3', '4']
 
 
@@ -34,8 +29,15 @@ async def cmd_start(message: types.Message, state: FSMContext):
     :param message: объект сообщения
     :return: None
     """
-    await message.answer(f"Здравствуйте, {html.quote(message.from_user.full_name)}!",
-                         reply_markup=make_2col_keyboard(start_list))
+    await message.answer(
+        f"Здравствуйте, {html.quote(message.from_user.full_name)}! "
+        + "Этот бот предназначен для прохождения тестов.\n\n"
+        + "Тест 1 - тест по математике;\n"
+        + "Тест 2 - шуточный тест на iq;\n"
+        + "Тест 3 - тест по математике.\n\n"
+        + "Во время прохождения теста Вы можете написать в чат <b>\"отмена\"</b> "
+        + "для выхода из теста в главное меню.",
+    reply_markup=make_2col_keyboard(start_list))
     await state.set_state(TestStates.waiting_for_test_number)
 
 
