@@ -1,18 +1,16 @@
-from aiogram import html
-from aiogram import types
-from keyboards import make_2col_keyboard
-from aiogram import F, Router
-from aiogram.filters import Command
-from aiogram.filters import StateFilter
+from aiogram import F, Router, html, types
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import default_state, StatesGroup, State
+from aiogram.fsm.state import State, StatesGroup, default_state
 from aiogram.types import Message
+
+from keyboards import make_2col_keyboard
 
 default_router = Router()
 
-#Названия кнопок
+# Названия кнопок
 start_list = ["Тест 1", "Тест 2", "Тест 3"]
-answers_num = ['1', '2', '3', '4']
+answers_num = ["1", "2", "3", "4"]
 
 
 # Определяем состояния
@@ -35,9 +33,10 @@ async def cmd_start(message: types.Message, state: FSMContext):
         + "Тест 1 - тест по математике;\n"
         + "Тест 2 - шуточный тест на iq;\n"
         + "Тест 3 - тест по математике.\n\n"
-        + "Во время прохождения теста Вы можете написать в чат <b>\"отмена\"</b> "
+        + 'Во время прохождения теста Вы можете написать в чат <b>"отмена"</b> '
         + "для выхода из теста в главное меню.",
-    reply_markup=make_2col_keyboard(start_list))
+        reply_markup=make_2col_keyboard(start_list),
+    )
     await state.set_state(TestStates.waiting_for_test_number)
 
 
@@ -54,8 +53,7 @@ async def cmd_cancel_no_state(message: Message, state: FSMContext):
     """
     # Стейт сбрасывать не нужно, удалим только данные
     await state.set_state(TestStates.waiting_for_test_number)
-    await message.answer(text="Нечего отменять",
-                         reply_markup=make_2col_keyboard(start_list))
+    await message.answer(text="Нечего отменять", reply_markup=make_2col_keyboard(start_list))
 
 
 # Хэндлер на выход из автомата состояний 2
@@ -70,5 +68,4 @@ async def cmd_cancel(message: Message, state: FSMContext):
     :return: None
     """
     await state.set_state(TestStates.waiting_for_test_number)
-    await message.answer(text="Действие отменено",
-                         reply_markup=make_2col_keyboard(start_list))
+    await message.answer(text="Действие отменено", reply_markup=make_2col_keyboard(start_list))

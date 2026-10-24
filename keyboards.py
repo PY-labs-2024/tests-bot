@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 
@@ -9,7 +9,7 @@ def make_row_keyboard(items: list[str]) -> ReplyKeyboardMarkup:
     :return: объект реплай-клавиатуры
     """
     row = [KeyboardButton(text=item) for item in items]
-    return ReplyKeyboardMarkup(keyboard=[row],resize_keyboard=True)
+    return ReplyKeyboardMarkup(keyboard=[row], resize_keyboard=True)
 
 
 def make_2col_keyboard(items: list[str]) -> ReplyKeyboardMarkup:
