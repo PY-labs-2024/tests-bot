@@ -1,0 +1,38 @@
+name: CI — Code Style & Quality
+
+# Когда запускать пайплайн
+on:
+  push:
+    branches: [main, master]      # при пуше в main/master
+  pull_request:
+    branches: [main, master]      # при создании PR
+
+jobs:
+  # ===== JOB 1: Линтер и форматер =====
+  lint-and-format:
+    name: Ruff (style + best practices)
+    runs-on: ubuntu-latest        # виртуальная машина с Ubuntu
+
+    steps:
+      # Шаг 1: Скачать код репозитория
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Шаг 2: Установить Python 3.11
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Шаг 3: Установить Ruff
+      - name: Install Ruff
+        run: pip install ruff
+
+      # Шаг 4: Запустить линтер
+      - name: Ruff lint check
+        run: ruff check .
+
+      # Шаг 5: Запустить форматер в режиме проверки
+      # (не форматирует, а проверяет, отформатирован ли код)
+      - name: Ruff format check
+        run: ruff format --check .

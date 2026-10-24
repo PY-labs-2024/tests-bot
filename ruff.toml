@@ -1,0 +1,33 @@
+# ruff.toml
+line-length = 100
+target-version = "py310"
+
+[lint]
+select = [
+    "E",    # pycodestyle errors (PEP 8)
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (сортировка импортов)
+    "N",    # pep8-naming (именование)
+    "UP",   # pyupgrade (современный синтаксис)
+    "B",    # flake8-bugbear (best practices / семантика)
+    "A",    # flake8-builtins
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "RUF",  # ruff-specific rules
+]
+
+ignore = [
+    "RUF001",
+    "RUF002",
+    "RUF003"
+]
+
+[lint.isort]
+known-first-party = ["tests-bot"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
