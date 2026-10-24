@@ -1,10 +1,10 @@
 import asyncio
 import logging
-import config
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
+import config
 from handlers import default, testprocess
 
 # Включаем логирование, чтобы не пропустить важные сообщения

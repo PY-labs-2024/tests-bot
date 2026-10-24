@@ -24,8 +24,6 @@ ignore = [
     "RUF003"
 ]
 
-[lint.isort]
-
 [format]
 quote-style = "double"
 indent-style = "space"
