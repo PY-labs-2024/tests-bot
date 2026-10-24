@@ -1,6 +1,6 @@
 # ruff.toml
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [lint]
 select = [
@@ -25,9 +25,8 @@ ignore = [
 ]
 
 [lint.isort]
-known-first-party = ["tests-bot"]
 
 [format]
 quote-style = "double"
 indent-style = "space"
-line-ending = "auto"
+line-ending = "lf"
